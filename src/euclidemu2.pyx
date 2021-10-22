@@ -207,7 +207,7 @@ def check_param_range(par_dict): #, csm_index=0): #Only one cosmology for now
                          %( par_dict['wa_fld']))
 
     if A_s_not_in_range:
-        raise ValueError("Parameter range violation: \nA_s is set to %f, but should be in the interval [1.7e-9, 2.5e-9]."
+        raise ValueError("Parameter range violation: \nA_s is set to %e, but should be in the interval [1.7e-9, 2.5e-9]."
                          %( par_dict['A_s']))
 
 
@@ -388,6 +388,12 @@ def get_boost(cosmo_par_in,redshifts,custom_kvec=None):
     do_extrapolate_above = False
     do_extrapolate_below = False
     if not(custom_kvec is None):
+
+        if isinstance(custom_kvec, (int, float)):
+            custom_kvec = np.asarray([custom_kvec])
+        else:
+            custom_kvec = np.asarray(custom_kvec)
+
         upper_mask = custom_kvec < max(kvals)
         lower_mask = custom_kvec > min(kvals)
         mask = [u and l for (u,l) in zip(lower_mask, upper_mask)]
@@ -552,5 +558,3 @@ def get_pnonlin(emu_pars_dict, redshifts, custom_kvec=None):
             pnonlin[i] = plin[i]*Bk[i]
 
     return kvec, pnonlin, plin, Bk
-
-    
