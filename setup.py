@@ -1,11 +1,13 @@
 from setuptools import setup, Extension, find_packages
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
-import os
+import os, platform
 from distutils.sysconfig import get_python_lib
 
-os.environ["CC"] = "g++"
-os.environ["CXX"] = "g++"
+if platform.system()=="Darwin":
+    os.environ["CC"] = "g++"
+    os.environ["CXX"] = "g++"
+
 
 if 'LDFLAGS' in os.environ.keys():
     ldfl=os.environ['LDFLAGS']
