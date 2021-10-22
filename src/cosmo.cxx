@@ -87,7 +87,7 @@ Cosmology::Cosmology(double Omega_b, double Omega_m, double Sum_m_nu, double n_s
 	if(PRINT_FLAG){
 	  print_cosmo();
 	  print_cosmo_tf();
-	}	
+	}
 }
 
 
@@ -282,7 +282,7 @@ void Cosmology::compute_z2nStep_spline(){
 double Cosmology::compute_step_number(double z){
 	/* This function evaluates the spline mapping *\
 	\* a redshift to a (fractional) output step.  */
-	if(abs(z) < EPSCOSMO){
+	if(fabs(z) < EPSCOSMO){
 		return 100.0;
 	}
 	else{
