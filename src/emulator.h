@@ -20,8 +20,16 @@
 #ifndef EMULATOR_H
 #define EMULATOR_H
 
-#ifndef PATH_TO_EE2_DATA_FILE
-#define PATH_TO_EE2_DATA_FILE "./ee2_bindata.dat"
+#ifndef PATH_TO_EE2_DATA_FILE1
+#define PATH_TO_EE2_DATA_FILE1 "./ee2_bindata.dat"
+#endif
+
+#ifndef PATH_TO_EE2_DATA_FILE2
+#define PATH_TO_EE2_DATA_FILE2 "./ee2_bindata.dat"
+#endif
+
+#ifndef PATH_TO_EE2_DATA_FILE3
+#define PATH_TO_EE2_DATA_FILE3 "./ee2_bindata.dat"
 #endif
 
 #include <gsl/gsl_errno.h>

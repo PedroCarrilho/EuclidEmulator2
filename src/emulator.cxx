@@ -76,10 +76,20 @@ void EuclidEmulator::read_in_ee2_data_file(){
 	}
 
 	// ==== LOAD EUCLIDEMULATOR2 DATA FILE ==== //
-	int fp = open(PATH_TO_EE2_DATA_FILE, O_RDONLY);
-	if(!fp) {
+	int fp = open(PATH_TO_EE2_DATA_FILE1, O_RDONLY);
+
+	if(fp==-1) {
+		fp = open(PATH_TO_EE2_DATA_FILE2, O_RDONLY);
+	}
+	if(fp==-1) {
+		fp = open(PATH_TO_EE2_DATA_FILE3, O_RDONLY);
+	}
+  if(fp==-1) {
+	  fp = open("./ee2_bindata.dat", O_RDONLY);
+  }
+	if(fp==-1) {
 		cerr << "Unable to open ./ee2_bindata.dat\n";
-        exit(1);
+    exit(1);
 	}
 
 	// Get the size of the file. //
