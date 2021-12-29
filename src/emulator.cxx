@@ -30,6 +30,9 @@
 #include <assert.h>
 #include "emulator.h"
 
+#include <errno.h>
+#include <string.h>
+
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>
@@ -88,7 +91,8 @@ void EuclidEmulator::read_in_ee2_data_file(){
 	  fp = open("./ee2_bindata.dat", O_RDONLY);
   }
 	if(fp==-1) {
-		cerr << "Unable to open ./ee2_bindata.dat\n";
+		cerr << "Unable to open ee2_bindata.dat\n";
+		cerr << "Error is: " << strerror(errno) << endl;
     exit(1);
 	}
 
@@ -124,6 +128,8 @@ void EuclidEmulator::read_in_ee2_data_file(){
     idx += nk;
 	// Check if all data has been read in properly
 	assert(idx == size/sizeof(double));
+
+	close(fp);
 
 }
 
