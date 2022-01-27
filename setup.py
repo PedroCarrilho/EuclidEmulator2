@@ -34,6 +34,9 @@ extensions=Extension(name="euclidemu2",
 
 
 setup(name='euclidemu2',
+      author="Pedro Carrilho,  Mischa Knabenhans",
+      description="Python wrapper for EuclidEmulator2",
+      author_email="pedromgcarrilho@gmail.com",
       cmdclass={'build_ext': build_ext},
       ext_modules = cythonize(extensions,language_level = 3),
       packages=['euclidemu2'],

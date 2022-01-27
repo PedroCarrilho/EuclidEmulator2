@@ -1,6 +1,6 @@
 /* cosmo.h
 *  =======
-*  This file is part of EuclidEmulator2 
+*  This file is part of EuclidEmulator2
 *  Copyright (c) 2020 Mischa Knabenhans
 *
 *  EuclidEmulator2 is free software: you can redistribute it and/or modify
@@ -23,27 +23,27 @@
 #include <gsl/gsl_spline.h>
 
 class Cosmology{
-	public:	
+	public:
 		double cosmo[8], cosmo_tf[8];
 		double Omega_gamma_0, Omega_nu_0, Omega_DE_0, rho_crit, T_gamma_0, T_nu_0;
 
 		/* Ranges for cosmological parameters */
         const double minima[8] = {0.04, 0.24, 0.00, 0.92, 0.61, -1.3, -0.7, 1.7e-9};
         const double maxima[8] = {0.06, 0.40, 0.15, 1.00, 0.73, -0.7, 0.7, 2.5e-9};
-		
+
 		/* Member functions */
 		Cosmology(double Omega_b, double Omega_m, double Sum_m_nu, double n_s, double h, double w_0, double w_a, double A_s);
-		//~Cosmology();
+		~Cosmology();
 		void read_from_file(char *filename);
 		void print_cosmo();
 		void print_cosmo_tf();
-	    double compute_step_number(double z);	
+	    double compute_step_number(double z);
 		static double rho_nu_i_integrand(double p, void * params);
 		static double a2t_integrand(double a, void * params);
 
-	private:	
+	private:
 		/* Private members */
-		const int nSteps, nTable;	
+		const int nSteps, nTable;
 		double t0, t10, Delta_t, Neff, H0;
 
 		typedef struct {

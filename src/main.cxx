@@ -1,6 +1,6 @@
 /* main.cxx
 *  =========
-*  This file is part of EuclidEmulator2 
+*  This file is part of EuclidEmulator2
 *  Copyright (c) 2020 Mischa Knabenhans
 *
 *  EuclidEmulator2 is free software: you can redistribute it and/or modify
@@ -73,12 +73,14 @@ int main(int argc, char *argv[]) {
 		/*for(int i = 0; i < CSM.n_redshift[cntr]; i++){
 			printf("z[%d][%d] = %f\n", cntr, i, CSM.zvec.at(cntr).at(i));
 		}*/
-		ee2.compute_nlc(cosmo, CSM.zvec[cntr], CSM.n_redshift[cntr]);
+		ee2.compute_nlc(&cosmo, CSM.zvec[cntr], CSM.n_redshift[cntr]);
 		//printf("NLC computed successfully.\n");
 		/* Write result to file. Format: k [h/Mpc] B(k,z0) B(k,z1) ... B(k,zn) */
 		string filename = CSM.outdir+CSM.outfilename+to_string(cntr)+".dat";
 		std::cout << "Filename-->"<< filename << std::endl;
 		ee2.write_nlc2file(filename, CSM.zvec[cntr], CSM.n_redshift[cntr]);
+
+    std::cout<<cosmo.cosmo[0]<<std::endl;
 	}
 
 	/* CLOSE EE2 SESSION (no explicit destructor required)*/

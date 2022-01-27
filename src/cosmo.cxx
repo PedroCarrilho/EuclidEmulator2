@@ -90,6 +90,12 @@ Cosmology::Cosmology(double Omega_b, double Omega_m, double Sum_m_nu, double n_s
 	}
 }
 
+/* DESTRUCTOR */
+Cosmology::~Cosmology(){
+		gsl_spline_free(z2nStep_spline);
+		gsl_integration_workspace_free(gsl_wsp);
+		gsl_interp_accel_free(acc);
+}
 
 /* CHECK PARAMETER RANGES */
 void Cosmology::check_parameter_ranges(){

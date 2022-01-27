@@ -59,7 +59,15 @@ EuclidEmulator::EuclidEmulator():
 EuclidEmulator::~EuclidEmulator(){
 	for(int i=0; i<15; i++) {
 		gsl_spline2d_free(logklogz2pc_spline[i]);
+		gsl_interp_accel_free(logk2pc_acc[i]);
+		gsl_interp_accel_free(logz2pc_acc[i]);
 	}
+	for (int ipar=0; ipar < 8; ipar++){
+		delete [] univ_legendre[ipar];
+	}
+	// Free data stored when file is opened. Size is taken from having previously printed it out.
+	munmap(pc[0], 7698560);
+
 }
 
 /* FUNCTION TO READ IN THE DATA FILE */
@@ -70,7 +78,6 @@ void EuclidEmulator::read_in_ee2_data_file(){
 	double *data;
 	double *kptr;
 	int i, ik, iz, idx = 0;
-
 
 	for(iz = 0; iz < nz; iz++){
 		for(ik = 0; ik < nk; ik++){
@@ -147,11 +154,15 @@ void EuclidEmulator::pc_2d_interp(){
     	logklogz2pc_spline[i] = gsl_spline2d_alloc(gsl_interp2d_bicubic, nk, nz);
     	gsl_spline2d_init(logklogz2pc_spline[i], logk, stp, pc[i], nk, nz);
 	}
+	for (int ipar=0; ipar < 8; ipar++){
+		univ_legendre[ipar] = new double[lmax+1];
+	}
 }
 
 /* COMPUTE NLC */
 //void EuclidEmulator::compute_nlc(Cosmology csm, double* redshift, int n_redshift, double* kmodes, int n_kmodes){
-void EuclidEmulator::compute_nlc(Cosmology csm, vector<double> redshift, int n_redshift){
+void EuclidEmulator::compute_nlc(Cosmology* csm, vector<double> redshift, int n_redshift){
+
 	double pc_weight;
 	double basisfunc;
 	double stp_no[n_redshift];
@@ -167,15 +178,15 @@ void EuclidEmulator::compute_nlc(Cosmology csm, vector<double> redshift, int n_r
 					  << "The current redshift z = " << redshift.at(iz) << " is therefore ignored." << std::endl;
 			continue;
 		}
-		stp_no[iz] = csm.compute_step_number(redshift.at(iz));
+		stp_no[iz] = csm->compute_step_number(redshift.at(iz));
         //printf("nStep(%.2f) = %.4f\n", redshift.at(iz), stp_no[iz]);
 	}
 	//printf("Redshifts mapped to nStep\n");
 
 	// Pre-compute all Legendre polynomials up to order lmax
 	for (int ipar=0; ipar < 8; ipar++){
-		univ_legendre[ipar] = new double[lmax+1];
-		gsl_sf_legendre_Pl_array(lmax, csm.cosmo_tf[ipar], univ_legendre[ipar]);
+		//univ_legendre[ipar] = new double[lmax+1];
+		gsl_sf_legendre_Pl_array(lmax, csm->cosmo_tf[ipar], univ_legendre[ipar]);
 		for (int l=0; l<=lmax; l++){
 			univ_legendre[ipar][l] *= sqrt(2.0*l + 1.0); //normalization
 		}
@@ -212,6 +223,7 @@ void EuclidEmulator::compute_nlc(Cosmology csm, vector<double> redshift, int n_r
 			}
 		}
 	}
+
 	//printf("PCA assembled\n");
 }
 

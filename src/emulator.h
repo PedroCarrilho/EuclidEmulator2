@@ -73,7 +73,7 @@ class EuclidEmulator{
 		/* Public member functions */
 		EuclidEmulator();
 		~EuclidEmulator();
-		void compute_nlc(Cosmology csm, vector<double> redshift, int n_redshift);
+		void compute_nlc(Cosmology* csm, vector<double> redshift, int n_redshift);
 		void write_nlc2file(const string &filename, vector<double> zvec, int n_redshift);
 };
 

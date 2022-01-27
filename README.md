@@ -3,12 +3,12 @@ This repository contains the source code of EuclidEmulator2, a fast and accurate
 In contrast to its predecessor EuclidEmulator, EuclidEmulator2 allows for 8-parameter cosmological models including massive neutrinos (assuming a degenerate hierarchy) and dynamical dark energy. EuclidEmulator2 is written in C++. For more information on EuclidEmulator please visit https://github.com/miknab/EuclidEmulator.
 
 Authors:   M. Knabenhans, Pedro Carrilho<br/>
-Date of last update:      March 2021<br/>
+Date of last update:      January 2022<br/>
 Reference: Euclid Consortium: Knabenhans et al. (submitted), <a>https://arxiv.org/abs/2010.11288</a><br/>
 
 If you use EuclidEmulator2 in any way (for a publication or otherwise), please cite this paper.
 
-<b>Contact information:</b> If you have any questions and/or remarks related to this work, please do not hesitate to send me an email (mischakATphysik.uzh.ch). For questions regarding the Python wrapper, contact Pedro Carrilho (p.gregoriocarrilhoATqmul.ac.uk).
+<b>Contact information:</b> If you have any questions and/or remarks related to this work, please do not hesitate to send me an email (mischakATphysik.uzh.ch). For questions regarding the Python wrapper, contact Pedro Carrilho (pedromgcarrilhoATgmail.com).
 
 ## Currently implemented features
 * emulation of the non-linear correction factor <i>B(k,z)</i>
@@ -225,7 +225,11 @@ Notice that the `-t` flag is mandatory in this case in order to tell the code wh
 
 To run the python wrapper, first import the package via
 ```
-import euclidemu2 as ee2
+import euclidemu2
+```
+and create an instance of `PyEuclidEmulator` via
+```
+ee2 = euclidemu2.PyEuclidEmulator()
 ```
 then create a python dictionary with the requested values of the cosmological parameters:
 ```
