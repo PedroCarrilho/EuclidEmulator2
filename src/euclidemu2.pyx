@@ -128,7 +128,16 @@ cdef class PyEuclidEmulator:
     def Bvec(self):
         del self.Bvec
 
+    bounds = {'Omega_b': [0.04, 0.06],
+              'Omega_m': [0.24, 0.40],
+              'm_ncdm': [0.00, 0.15],
+              'n_s': [0.92, 1.00],
+              'h': [0.61, 0.73],
+              'w0_fld': [-1.3, -0.7],
+              'wa_fld': [-0.7,  0.5],
+              'A_s': [1.7e-9, 2.5e-9]}
 
+    z_max = 10.0
 
     #Extra functions to manipulate the results of the c++ computations
 

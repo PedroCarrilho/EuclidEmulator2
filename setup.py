@@ -34,6 +34,7 @@ extensions=Extension(name="euclidemu2",
 
 
 setup(name='euclidemu2',
+      version="1.3.0",
       author="Pedro Carrilho,  Mischa Knabenhans",
       description="Python wrapper for EuclidEmulator2",
       author_email="pedromgcarrilho@gmail.com",
