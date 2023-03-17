@@ -9,6 +9,13 @@ from site import getusersitepackages
 os.environ["CC"] = "g++"
 os.environ["CXX"] = "g++"
 
+# Get paths to GSL
+stream = os.popen('pkg-config --libs-only-L gsl')
+path_gsl_lib = stream.read().strip()
+stream = os.popen('pkg-config --cflags-only-I gsl')
+path_gsl_inc = stream.read().strip()
+path_gsl_inc.replace('-I','')
+
 if 'LDFLAGS' in os.environ.keys():
     ldfl=os.environ['LDFLAGS']
     new_ldfl=ldfl.replace('-Wl,-dead_strip_dylibs ','')
@@ -21,9 +28,9 @@ pathtodata=os.getcwd()
 
 extensions=Extension(name="euclidemu2",
                            sources=["src/euclidemu2.pyx","src/cosmo.cxx","src/emulator.cxx"],
-                           include_dirs=["/usr/local/include","../src/"],
+                           include_dirs=["/usr/local/include","../src/",path_gsl_inc],
                            libraries=["gsl","gslcblas"],
-                           extra_link_args=['-L/usr/local/lib'],
+                           extra_link_args=[path_gsl_lib],
                            language="c++",
                            extra_compile_args=['-std=c++11',
                                                '-D PRINT_FLAG=0',
