@@ -1,48 +1,104 @@
+import os
+import sys
+import subprocess
 from setuptools import setup, Extension, find_packages
-from Cython.Distutils import build_ext
+import numpy as np
 from Cython.Build import cythonize
-import os, platform
-from distutils.sysconfig import get_python_lib
-from site import getusersitepackages
 
-# Setting the compiler to g++
-os.environ["CC"] = "g++"
-os.environ["CXX"] = "g++"
+def locate_gsl():
+    """
+    Function to find GSL in 4 possible places that depend on how it was installed 
+    and whether pkg-config is installed. 
+    """
+    # Check if GSL installed via conda and use that path
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix:
+        inc = os.path.join(conda_prefix, "include")
+        lib = os.path.join(conda_prefix, "lib")
+        header = os.path.join(inc, "gsl", "gsl_math.h")
+        if os.path.exists(header):
+            return inc, lib
 
-if 'LDFLAGS' in os.environ.keys():
-    ldfl=os.environ['LDFLAGS']
-    new_ldfl=ldfl.replace('-Wl,-dead_strip_dylibs ','')
-    os.environ['LDFLAGS']=new_ldfl
+    # Try using pkg-config (if installed) to find path to GSL
+    try:
+        cflags = subprocess.check_output(["pkg-config", "--cflags", "gsl"],
+                                         stderr=subprocess.DEVNULL).decode().strip().split()
+        libs = subprocess.check_output(["pkg-config", "--libs", "gsl"],
+                                       stderr=subprocess.DEVNULL).decode().strip().split()
+        inc = None
+        lib = None
+        for tok in cflags:
+            if tok.startswith("-I"):
+                inc = tok[2:]
+        for tok in libs:
+            if tok.startswith("-L"):
+                lib = tok[2:]
+        if inc and lib:
+            return inc, lib
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pass
 
-# Getting the three possible locations for the installed files
-pathtopythonlib1=get_python_lib()
-pathtopythonlib2=getusersitepackages()
-pathtodata=os.getcwd()
+    # Use default paths in macOS as installed via HomeBrew
+    if sys.platform == "darwin":
+        for prefix in ("/usr/local", "/opt/homebrew"):
+            inc = os.path.join(prefix, "include")
+            lib = os.path.join(prefix, "lib")
+            header = os.path.join(inc, "gsl", "gsl_math.h")
+            if os.path.exists(header):
+                return inc, lib
 
-extensions=Extension(name="euclidemu2",
-                           sources=["src/euclidemu2.pyx","src/cosmo.cxx","src/emulator.cxx"],
-                           include_dirs=["/usr/local/include","../src/"],
-                           libraries=["gsl","gslcblas"],
-                           extra_link_args=['-L/usr/local/lib'],
-                           language="c++",
-                           extra_compile_args=['-std=c++11',
-                                               '-D PRINT_FLAG=0',
-                                               '-D PATH_TO_EE2_DATA_FILE1="'+pathtopythonlib1+'/euclidemu2/ee2_bindata.dat"',
-                                               '-D PATH_TO_EE2_DATA_FILE2="'+pathtopythonlib2+'/euclidemu2/ee2_bindata.dat"',
-                                               '-D PATH_TO_EE2_DATA_FILE3="'+pathtodata+'/ee2_bindata.dat"']
-                           )
+    # Standard unix paths
+    for prefix in ("/usr/local", "/usr"):
+        inc = os.path.join(prefix, "include")
+        lib = os.path.join(prefix, "lib")
+        header = os.path.join(inc, "gsl", "gsl_math.h")
+        if os.path.exists(header):
+            return inc, lib
 
+    return None, None
 
-setup(name='euclidemu2',
-      version="1.3.0",
-      author="Pedro Carrilho,  Mischa Knabenhans",
-      description="Python wrapper for EuclidEmulator2",
-      author_email="pedromgcarrilho@gmail.com",
-      cmdclass={'build_ext': build_ext},
-      ext_modules = cythonize(extensions,language_level = 3),
-      packages=['euclidemu2'],
-      package_dir={'euclidemu2': 'src'},
-      package_data={'euclidemu2': ["ee2_bindata.dat","cosmo.h","emulator.h","units_and_constants.h"]},
-      include_package_data=True,
-      install_requires=['cython','numpy','scipy']
-      )
+gsl_inc, gsl_lib = locate_gsl()
+
+# Throw error if cannot find GSL
+if gsl_inc is None or gsl_lib is None:
+    msg = (
+        "Could not find GSL in the predicted places."
+        "If you have not installed it, we recommend installing it via conda/mamba."
+        "If you have installed it and it is in an unusual path, we recommend installing pkg-config to find it automatically."
+    )
+    raise RuntimeError(msg)
+
+package_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(package_dir, "euclidemu2", "ee2_bindata.dat")
+
+ext_modules = [
+    Extension(
+        "euclidemu2",
+        sources=[
+            "src/euclidemu2.pyx","src/cosmo.cxx","src/emulator.cxx"
+        ],
+        include_dirs=["src", gsl_inc, np.get_include()],
+        library_dirs=[gsl_lib],
+        libraries=["gsl", "gslcblas"],
+        language="c++",
+        extra_compile_args=["-std=c++11"],
+        define_macros=[
+        ("PRINT_FLAG", "0"),
+        ("PATH_TO_EE2_DATA_FILE1", f"\"{data_dir}\""),
+        ]
+    )
+]
+
+setup(
+    name="euclidemu2",
+    version="1.4.0",
+    packages=find_packages(),
+    ext_modules=cythonize(ext_modules),
+    install_requires=[
+        "numpy",
+        "scipy"
+    ],
+    package_data={'euclidemu2': ["ee2_bindata.dat"]},
+    include_package_data=True,
+    zip_safe=False,
+)

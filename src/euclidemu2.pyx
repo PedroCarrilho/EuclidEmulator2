@@ -504,9 +504,11 @@ cdef class PyEuclidEmulator:
         classy_pars['output'] = 'mPk'
         classy_pars['P_k_max_1/Mpc'] = custom_kvec[-1]*cosmo_par['h']
         classy_pars['z_pk'] = z_str
-        # Assuming a single massive neutrino with all the mass
-        classy_pars['N_ur']=2.0308
-        classy_pars['N_ncdm']=1
+        # Assuming 3 degenerate massive neutrinos all with the same mass
+        classy_pars['N_ur'] = 0.0044
+        classy_pars['N_ncdm'] = 3
+        m_each_nu = cosmo_par['m_ncdm'] / 3
+        classy_pars['m_ncdm'] = ",".join(f"{m_each_nu:g}" for _ in range(3))
 
 
         # Create a "Class" instance called "cosmo" and run classy to compute
