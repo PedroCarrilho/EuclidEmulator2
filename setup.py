@@ -4,6 +4,8 @@ import subprocess
 from setuptools import setup, Extension, find_packages
 import numpy as np
 from Cython.Build import cythonize
+from distutils.sysconfig import get_python_lib
+from site import getusersitepackages
 
 def locate_gsl():
     """
@@ -68,8 +70,13 @@ if gsl_inc is None or gsl_lib is None:
     )
     raise RuntimeError(msg)
 
+# Try 3 different paths to the file ee2_bindata.dat, so that you are sure to find it
+pathtopythonlib1=get_python_lib()
+data_dir_1 = os.path.join(pathtopythonlib1, "euclidemu2", "ee2_bindata.dat")
+pathtopythonlib2=getusersitepackages()
+data_dir_2 = os.path.join(pathtopythonlib2, "euclidemu2", "ee2_bindata.dat")
 package_dir = os.path.dirname(os.path.abspath(__file__))
-data_dir = os.path.join(package_dir, "euclidemu2", "ee2_bindata.dat")
+data_dir_3 = os.path.join(package_dir, "ee2_bindata.dat")
 
 ext_modules = [
     Extension(
@@ -84,14 +91,16 @@ ext_modules = [
         extra_compile_args=["-std=c++11"],
         define_macros=[
         ("PRINT_FLAG", "0"),
-        ("PATH_TO_EE2_DATA_FILE1", f"\"{data_dir}\""),
+        ("PATH_TO_EE2_DATA_FILE1", f"\"{data_dir_1}\""),
+        ("PATH_TO_EE2_DATA_FILE2", f"\"{data_dir_2}\""),
+        ("PATH_TO_EE2_DATA_FILE3", f"\"{data_dir_3}\""),
         ]
     )
 ]
 
 setup(
     name="euclidemu2",
-    version="1.4.0",
+    version="1.4.1",
     packages=find_packages(),
     ext_modules=cythonize(ext_modules),
     install_requires=[

@@ -1,10 +1,10 @@
-# EuclidEmulator2 (version 1.0.1)
+# EuclidEmulator2 (version 1.4.1)
 This repository contains the source code of EuclidEmulator2, a fast and accurate tool to estimate the non-linear correction to the matter power spectrum.
 In contrast to its predecessor EuclidEmulator, EuclidEmulator2 allows for 8-parameter cosmological models including massive neutrinos (assuming a degenerate hierarchy) and dynamical dark energy. EuclidEmulator2 is written in C++. For more information on EuclidEmulator please visit https://github.com/miknab/EuclidEmulator.
 
 Authors:   M. Knabenhans, Pedro Carrilho<br/>
-Date of last update:      January 2022<br/>
-Reference: Euclid Consortium: Knabenhans et al. (submitted), <a>https://arxiv.org/abs/2010.11288</a><br/>
+Date of last update:      December 2025<br/>
+Reference: Euclid Consortium: Knabenhans et al., <a>https://arxiv.org/abs/2010.11288</a><br/>
 
 If you use EuclidEmulator2 in any way (for a publication or otherwise), please cite this paper.
 
@@ -65,6 +65,8 @@ make install
  ```
  export LD_LIBRARY_PATH=$HOME/local/gsl/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
  ```
+
+If are able to use conda, you can also install gsl via `conda install gsl` and the Euclid Emulator 2 python installer should be able to find gsl automatically.
 
 ### Test installations
 The c++ code was successfully compiled on the following systems and environments:
