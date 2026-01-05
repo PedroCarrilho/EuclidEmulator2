@@ -1,9 +1,9 @@
-# EuclidEmulator2 (version 1.4.1)
+# EuclidEmulator2 (version 1.01. of the emulator, version 1.4.1 of the wrapper)
 This repository contains the source code of EuclidEmulator2, a fast and accurate tool to estimate the non-linear correction to the matter power spectrum.
 In contrast to its predecessor EuclidEmulator, EuclidEmulator2 allows for 8-parameter cosmological models including massive neutrinos (assuming a degenerate hierarchy) and dynamical dark energy. EuclidEmulator2 is written in C++. For more information on EuclidEmulator please visit https://github.com/miknab/EuclidEmulator.
 
 Authors:   M. Knabenhans, Pedro Carrilho<br/>
-Date of last update:      December 2025<br/>
+Date of last update:      January 2026<br/>
 Reference: Euclid Consortium: Knabenhans et al., <a>https://arxiv.org/abs/2010.11288</a><br/>
 
 If you use EuclidEmulator2 in any way (for a publication or otherwise), please cite this paper.

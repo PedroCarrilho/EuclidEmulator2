@@ -64,8 +64,8 @@ gsl_inc, gsl_lib = locate_gsl()
 # Throw error if cannot find GSL
 if gsl_inc is None or gsl_lib is None:
     msg = (
-        "Could not find GSL in the predicted places."
-        "If you have not installed it, we recommend installing it via conda/mamba."
+        "Could not find GSL in the predicted places. "
+        "If you have not installed it, we recommend installing it via conda/mamba. "
         "If you have installed it and it is in an unusual path, we recommend installing pkg-config to find it automatically."
     )
     raise RuntimeError(msg)
@@ -101,7 +101,11 @@ ext_modules = [
 setup(
     name="euclidemu2",
     version="1.4.1",
-    packages=find_packages(),
+    author="Pedro Carrilho,  Mischa Knabenhans",
+    description="Python wrapper for EuclidEmulator2",
+    author_email="pedromgcarrilho@gmail.com",
+    packages=['euclidemu2'],
+    package_dir={'euclidemu2': 'src'},
     ext_modules=cythonize(ext_modules),
     install_requires=[
         "numpy",
